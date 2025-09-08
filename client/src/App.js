@@ -4,6 +4,10 @@ import axios from 'axios';
 import './App.css';
 
 function App() {
+
+  console.log('The API URL is:', process.env.REACT_APP_API_URL);
+
+
   const [longUrl, setLongUrl] = useState('');
   const [shortUrl, setShortUrl] = useState('');
 
@@ -14,7 +18,7 @@ function App() {
 
       console.log('Response from server:', response.data); 
 
-      
+
       setShortUrl(response.data.shortId);
     } catch (error) {
       setShortUrl('');
