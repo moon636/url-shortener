@@ -10,7 +10,7 @@ function App() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('api/shorten', { longUrl });
+      const response = await axios.post('${process.env.REACT_APP_API_URL}/api/shorten', { longUrl });
       setShortUrl(response.data.shortId);
     } catch (error) {
       setShortUrl('');
