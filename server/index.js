@@ -56,10 +56,17 @@ app.post('/api/shorten', async (req, res) => {
 	if (!longUrl) {
 		return res.status(400).json({ error: 'longUrl is required' });
 	}
-	const shortId = nanoid(6);
 	try {
-		const newUrl = new Url({ longUrl, shortId });
-		await newUrl.save();
+		// Check if the longUrl already exists
+		let urlDoc = await Url.findOne({ longUrl });
+		if (urlDoc) {
+			// If found, return the existing shortId
+			return res.json({ shortId: urlDoc.shortId });
+		}
+		// Otherwise, create a new shortId and save
+		const shortId = nanoid(6);
+		urlDoc = new Url({ longUrl, shortId });
+		await urlDoc.save();
 		res.json({ shortId });
 	} catch (err) {
 		console.error('Error saving URL:', err);
