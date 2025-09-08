@@ -5,19 +5,13 @@ import './App.css';
 
 function App() {
 
-  console.log('The API URL is:', process.env.REACT_APP_API_URL);
-
-
   const [longUrl, setLongUrl] = useState('');
   const [shortUrl, setShortUrl] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('${process.env.REACT_APP_API_URL}/api/shorten', { longUrl });
-
-      console.log('Response from server:', response.data); 
-
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/shorten`, { longUrl });
 
       setShortUrl(response.data.shortId);
     } catch (error) {
@@ -44,11 +38,11 @@ function App() {
             <div style={{ marginTop: '20px' }}>
               <p>Your short URL:</p>
               <a
-                href={`http://localhost:5000/${shortUrl}`}
+                href={`${process.env.REACT_APP_API_URL}/${shortUrl}`}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {`http://localhost:5000/${shortUrl}`}
+                {`${process.env.REACT_APP_API_URL}/${shortUrl}`}
               </a>
             </div>
           )}

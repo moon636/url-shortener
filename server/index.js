@@ -60,7 +60,6 @@ app.post('/api/shorten', async (req, res) => {
 	try {
 		const newUrl = new Url({ longUrl, shortId });
 		await newUrl.save();
-		console.log('SERVER LOG: About to send back this ID:', { shortId });
 		res.json({ shortId });
 	} catch (err) {
 		console.error('Error saving URL:', err);
