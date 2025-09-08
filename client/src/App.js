@@ -20,27 +20,32 @@ function App() {
 
   return (
     <div className="App">
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Enter a long URL"
-          value={longUrl}
-          onChange={e => setLongUrl(e.target.value)}
-        />
-        <button type="submit">Shorten</button>
-      </form>
-      {shortUrl && (
-        <div style={{ marginTop: '20px' }}>
-          <p>Your short URL:</p>
-          <a
-            href={`http://localhost:5000/${shortUrl}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {`http://localhost:5000/${shortUrl}`}
-          </a>
+      <div className="shortener-card">
+        <form onSubmit={handleSubmit}>
+          <input
+            className="url-input"
+            type="text"
+            placeholder="Enter a long URL"
+            value={longUrl}
+            onChange={e => setLongUrl(e.target.value)}
+          />
+          <button className="shorten-button" type="submit">Shorten</button>
+        </form>
+        <div className="result-container">
+          {shortUrl && (
+            <div style={{ marginTop: '20px' }}>
+              <p>Your short URL:</p>
+              <a
+                href={`http://localhost:5000/${shortUrl}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {`http://localhost:5000/${shortUrl}`}
+              </a>
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 }
