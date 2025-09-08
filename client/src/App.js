@@ -11,6 +11,10 @@ function App() {
     e.preventDefault();
     try {
       const response = await axios.post('${process.env.REACT_APP_API_URL}/api/shorten', { longUrl });
+
+      console.log('Response from server:', response.data); 
+
+      
       setShortUrl(response.data.shortId);
     } catch (error) {
       setShortUrl('');
