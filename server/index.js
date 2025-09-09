@@ -63,8 +63,18 @@ app.post('/api/shorten', async (req, res) => {
 			// If found, return the existing shortId
 			return res.json({ shortId: urlDoc.shortId });
 		}
-		// Otherwise, create a new shortId and save
-		const shortId = nanoid(6);
+		// Otherwise, create a unique shortId and save
+		let shortId;
+		let exists = true;
+		// Try up to 10 times to avoid infinite loop in rare case of collision
+		for (let i = 0; i < 10; i++) {
+			shortId = nanoid(6);
+			exists = await Url.exists({ shortId });
+			if (!exists) break;
+		}
+		if (exists) {
+			return res.status(500).json({ error: 'Failed to generate unique shortId' });
+		}
 		urlDoc = new Url({ longUrl, shortId });
 		await urlDoc.save();
 		res.json({ shortId });
