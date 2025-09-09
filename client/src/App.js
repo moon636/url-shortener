@@ -61,24 +61,23 @@ function App() {
           {shortUrl && (
             <div style={{ marginTop: '20px' }}>
               <p>Your short URL:</p>
-              <div>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
                 <a
                   href={`${process.env.REACT_APP_API_URL}/${shortUrl}`}
                   target="_blank"
                   rel="noopener noreferrer"
+                  style={{ wordBreak: 'break-all' }}
                 >
                   {`${process.env.REACT_APP_API_URL}/${shortUrl}`}
                 </a>
-                <div style={{ marginTop: '0.75rem' }}>
-                  <button
-                    type="button"
-                    style={{ padding: '6px 12px', borderRadius: '6px', border: 'none', background: '#2196f3', color: '#fff', cursor: 'pointer', fontWeight: 'bold' }}
-                    onClick={handleCopy}
-                  >
-                    Copy
-                  </button>
-                  {copySuccess && <span style={{ color: '#69f0ae', marginLeft: '0.5rem' }}>{copySuccess}</span>}
-                </div>
+                <button
+                  type="button"
+                  style={{ padding: '6px 12px', borderRadius: '6px', border: 'none', background: '#2196f3', color: '#fff', cursor: 'pointer', fontWeight: 'bold', marginTop: '0.75rem' }}
+                  onClick={handleCopy}
+                >
+                  Copy
+                </button>
+                {copySuccess && <span style={{ color: '#69f0ae', marginLeft: '0.5rem', marginTop: '0.5rem' }}>{copySuccess}</span>}
               </div>
               {wasExisting === true && (
                 <p style={{ color: '#ffd600', marginTop: '10px' }}>This link was already in the database.</p>
