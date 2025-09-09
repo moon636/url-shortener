@@ -7,16 +7,21 @@ function App() {
 
   const [longUrl, setLongUrl] = useState('');
   const [shortUrl, setShortUrl] = useState('');
+  const [customAlias, setCustomAlias] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/shorten`, { longUrl });
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/shorten`, { longUrl, customAlias });
 
       setShortUrl(response.data.shortId);
     } catch (error) {
       setShortUrl('');
-      alert('Failed to shorten URL');
+      if (error.response && error.response.status === 409) {
+        alert('That custom name is already taken. Please try another one.');
+      } else {
+        alert('Failed to shorten URL');
+      }
     }
   };
 
@@ -30,6 +35,14 @@ function App() {
             placeholder="Enter a long URL"
             value={longUrl}
             onChange={e => setLongUrl(e.target.value)}
+          />
+          <input
+            className="url-input"
+            type="text"
+            placeholder="Optional: your-custom-name"
+            value={customAlias}
+            onChange={e => setCustomAlias(e.target.value)}
+            style={{ marginTop: '1rem' }}
           />
           <button className="shorten-button" type="submit">Shorten</button>
         </form>

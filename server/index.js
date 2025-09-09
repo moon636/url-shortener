@@ -52,7 +52,7 @@ app.get('/:shortId', async (req, res) => {
 });
 // Route to shorten a URL
 app.post('/api/shorten', async (req, res) => {
-	const { longUrl } = req.body;
+	const { longUrl, customAlias } = req.body;
 	if (!longUrl) {
 		return res.status(400).json({ error: 'longUrl is required' });
 	}
@@ -63,17 +63,26 @@ app.post('/api/shorten', async (req, res) => {
 			// If found, return the existing shortId
 			return res.json({ shortId: urlDoc.shortId });
 		}
-		// Otherwise, create a unique shortId and save
+
 		let shortId;
-		let exists = true;
-		// Try up to 10 times to avoid infinite loop in rare case of collision
-		for (let i = 0; i < 10; i++) {
-			shortId = nanoid(6);
-			exists = await Url.exists({ shortId });
-			if (!exists) break;
-		}
-		if (exists) {
-			return res.status(500).json({ error: 'Failed to generate unique shortId' });
+		if (customAlias) {
+			// If customAlias is provided, check for conflicts
+			const aliasExists = await Url.exists({ shortId: customAlias });
+			if (aliasExists) {
+				return res.status(409).json({ error: 'Alias is already in use' });
+			}
+			shortId = customAlias;
+		} else {
+			// Otherwise, generate a unique shortId
+			let exists = true;
+			for (let i = 0; i < 10; i++) {
+				shortId = nanoid(6);
+				exists = await Url.exists({ shortId });
+				if (!exists) break;
+			}
+			if (exists) {
+				return res.status(500).json({ error: 'Failed to generate unique shortId' });
+			}
 		}
 		urlDoc = new Url({ longUrl, shortId });
 		await urlDoc.save();
