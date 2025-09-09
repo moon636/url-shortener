@@ -8,7 +8,14 @@ function App() {
   const [longUrl, setLongUrl] = useState('');
   const [shortUrl, setShortUrl] = useState('');
   const [wasExisting, setWasExisting] = useState(null); // null = not shown, true = existing, false = new
-  const [isCopied, setIsCopied] = useState(false);
+  const [copySuccess, setCopySuccess] = useState('');
+  const handleCopy = () => {
+    const url = `${process.env.REACT_APP_API_URL}/${shortUrl}`;
+    navigator.clipboard.writeText(url)
+      .then(() => setCopySuccess('Copied!'))
+      .catch(() => setCopySuccess('Failed to copy!'));
+    setTimeout(() => setCopySuccess(''), 1500);
+  };
   const [customAlias, setCustomAlias] = useState('');
 
   const handleSubmit = async (e) => {
@@ -26,17 +33,6 @@ function App() {
       } else {
         alert('Failed to shorten URL');
       }
-    }
-  };
-
-  const handleCopy = async () => {
-    if (!shortUrl) return;
-    try {
-      await navigator.clipboard.writeText(`${process.env.REACT_APP_API_URL}/${shortUrl}`);
-      setIsCopied(true);
-      setTimeout(() => setIsCopied(false), 2000);
-    } catch (err) {
-      // Optionally handle error
     }
   };
 
@@ -65,22 +61,23 @@ function App() {
           {shortUrl && (
             <div style={{ marginTop: '20px' }}>
               <p>Your short URL:</p>
-              <a
-                href={`${process.env.REACT_APP_API_URL}/${shortUrl}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {`${process.env.REACT_APP_API_URL}/${shortUrl}`}
-              </a>
-              {shortUrl && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <a
+                  href={`${process.env.REACT_APP_API_URL}/${shortUrl}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {`${process.env.REACT_APP_API_URL}/${shortUrl}`}
+                </a>
                 <button
                   type="button"
-                  style={{ marginLeft: '1rem', padding: '8px 16px', borderRadius: '6px', border: 'none', background: '#2196f3', color: '#fff', fontWeight: 'bold', cursor: 'pointer', transition: 'background 0.2s' }}
+                  style={{ padding: '6px 12px', borderRadius: '6px', border: 'none', background: '#2196f3', color: '#fff', cursor: 'pointer', fontWeight: 'bold' }}
                   onClick={handleCopy}
                 >
-                  {isCopied ? 'Copied!' : 'Copy'}
+                  Copy
                 </button>
-              )}
+                {copySuccess && <span style={{ color: '#69f0ae', marginLeft: '0.5rem' }}>{copySuccess}</span>}
+              </div>
               {wasExisting === true && (
                 <p style={{ color: '#ffd600', marginTop: '10px' }}>This link was already in the database.</p>
               )}
