@@ -60,8 +60,8 @@ app.post('/api/shorten', async (req, res) => {
 		// Check if the longUrl already exists
 		let urlDoc = await Url.findOne({ longUrl });
 		if (urlDoc) {
-			// If found, return the existing shortId
-			return res.json({ shortId: urlDoc.shortId });
+			// If found, return the existing shortId and flag
+			return res.json({ shortId: urlDoc.shortId, wasExisting: true });
 		}
 
 		let shortId;
@@ -84,9 +84,9 @@ app.post('/api/shorten', async (req, res) => {
 				return res.status(500).json({ error: 'Failed to generate unique shortId' });
 			}
 		}
-		urlDoc = new Url({ longUrl, shortId });
-		await urlDoc.save();
-		res.json({ shortId });
+	urlDoc = new Url({ longUrl, shortId });
+	await urlDoc.save();
+	res.json({ shortId, wasExisting: false });
 	} catch (err) {
 		console.error('Error saving URL:', err);
 		res.status(500).json({ error: 'Failed to save URL' });

@@ -7,6 +7,7 @@ function App() {
 
   const [longUrl, setLongUrl] = useState('');
   const [shortUrl, setShortUrl] = useState('');
+  const [wasExisting, setWasExisting] = useState(null); // null = not shown, true = existing, false = new
   const [customAlias, setCustomAlias] = useState('');
 
   const handleSubmit = async (e) => {
@@ -14,9 +15,11 @@ function App() {
     try {
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/shorten`, { longUrl, customAlias });
 
-      setShortUrl(response.data.shortId);
+  setShortUrl(response.data.shortId);
+  setWasExisting(response.data.wasExisting);
     } catch (error) {
-      setShortUrl('');
+  setShortUrl('');
+  setWasExisting(null);
       if (error.response && error.response.status === 409) {
         alert('That custom name is already taken. Please try another one.');
       } else {
@@ -57,6 +60,12 @@ function App() {
               >
                 {`${process.env.REACT_APP_API_URL}/${shortUrl}`}
               </a>
+              {wasExisting === true && (
+                <p style={{ color: '#ffd600', marginTop: '10px' }}>This link was already in the database.</p>
+              )}
+              {wasExisting === false && (
+                <p style={{ color: '#69f0ae', marginTop: '10px' }}>A new short URL was just created for you!</p>
+              )}
             </div>
           )}
         </div>
