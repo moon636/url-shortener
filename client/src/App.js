@@ -61,7 +61,7 @@ function App() {
           {shortUrl && (
             <div style={{ marginTop: '20px' }}>
               <p>Your short URL:</p>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <a
                   href={`${process.env.REACT_APP_API_URL}/${shortUrl}`}
                   target="_blank"
