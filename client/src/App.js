@@ -8,6 +8,7 @@ function App() {
   const [longUrl, setLongUrl] = useState('');
   const [shortUrl, setShortUrl] = useState('');
   const [wasExisting, setWasExisting] = useState(null); // null = not shown, true = existing, false = new
+  const [isCopied, setIsCopied] = useState(false);
   const [customAlias, setCustomAlias] = useState('');
 
   const handleSubmit = async (e) => {
@@ -25,6 +26,17 @@ function App() {
       } else {
         alert('Failed to shorten URL');
       }
+    }
+  };
+
+  const handleCopy = async () => {
+    if (!shortUrl) return;
+    try {
+      await navigator.clipboard.writeText(`${process.env.REACT_APP_API_URL}/${shortUrl}`);
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 2000);
+    } catch (err) {
+      // Optionally handle error
     }
   };
 
@@ -60,6 +72,15 @@ function App() {
               >
                 {`${process.env.REACT_APP_API_URL}/${shortUrl}`}
               </a>
+              {shortUrl && (
+                <button
+                  type="button"
+                  style={{ marginLeft: '1rem', padding: '8px 16px', borderRadius: '6px', border: 'none', background: '#2196f3', color: '#fff', fontWeight: 'bold', cursor: 'pointer', transition: 'background 0.2s' }}
+                  onClick={handleCopy}
+                >
+                  {isCopied ? 'Copied!' : 'Copy'}
+                </button>
+              )}
               {wasExisting === true && (
                 <p style={{ color: '#ffd600', marginTop: '10px' }}>This link was already in the database.</p>
               )}

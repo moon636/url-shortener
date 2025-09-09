@@ -1,3 +1,19 @@
+.copy-button {
+  background: #2196f3;
+  color: #fff;
+  border: none;
+  font-weight: bold;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 1rem;
+  margin-left: 1rem;
+}
+
+.copy-button.copied {
+  background: #43a047;
+}
 .result-container {
   background: #252525;
   padding: 1.5rem;
